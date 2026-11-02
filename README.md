@@ -318,7 +318,10 @@ codyssey-web:v1   d20d2b57f685       93.2MB         26.3MB
 ```bash
 # 전체 컨테이너 목록 확인
 % docker ps -a
-CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+CONTAINER ID   IMAGE             COMMAND                  CREATED             STATUS                      PORTS     NAMES
+10320ecb7581   codyssey-web:v1   "/docker-entrypoint.…"   39 minutes ago      Exited (0) 35 minutes ago             codyssey-volume-test
+a7eb628b95ca   codyssey-web:v1   "/docker-entrypoint.…"   About an hour ago   Up About an hour            80/tcp    volume-data
+5a42650d04b4   codyssey-web:v1   "/docker-entrypoint.…"   2 days ago          Exited (0) 18 hours ago               codyssey-container
 ```
 
 #### 3.3.5 컨테이너 상태 확인 및 종료
@@ -1087,17 +1090,133 @@ index.html이 그대로 남아 있다. (호스트 디렉터리의 데이터 유�
 
 사용 명령어: `git status`, `git add`, `git commit`, `git remote -v`, `git push`
 
-## 4. 검증 방법 및 결과
+#### 3.6.1 Git 저장소 확인
 
-| 검증 항목 | 실행 명령어 | 확인 내용 | 결과 |
-|---|---|---|---|
-| 운영체제 | `sw_vers` | macOS 27.0 |  |
-| Git | `git --version` | Git 버전 |  |
-| 파일 권한 | `ls -l` | 파일 권한 정보 | [결과 링크 또는 기록 위치] |
-| Docker | `docker ps -a` | 컨테이너 상태 | [결과 링크 또는 기록 위치] |
-| 이미지 빌드 | `docker images` | 생성된 이미지 | [결과 링크 또는 기록 위치] |
-| 포트 | `docker port [컨테이너명]` | 포트 매핑 정보 | [결과 링크 또는 기록 위치] |
-| GitHub | `git remote -v` | 원격 저장소 주소 |  |
+- Git은 파일의 변경 이력을 관리하는 버전 관리 시스템이다.
+- GitHub는 Git 저장소를 온라인에 저장하고 다른 사람과 공유할 수 있는 플랫폼이다.
+
+기존에 생성한 Git 저장소를 확인한다.
+
+```bash
+% git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   README.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+```
+
+현재 브랜치, 변경된 파일, 커밋되지 않은 파일 등의 상태를 확인할 수 있다.
+
+#### 3.6.2 변경 파일 확인 및 스테이징
+
+**변경 파일 확인**
+
+```bash
+git status
+```
+
+수정되거나 새로 생성된 파일을 확인한다.
+
+**변경 사항 스테이징**
+
+```bash
+git add .
+```
+
+변경된 파일을 스테이징 영역에 추가한다.
+스테이징 영역은 커밋할 변경 사항을 임시로 모아두는 공간이다.
+
+#### 3.6.3 변경 사항 커밋
+
+```bash
+git commit -m "update README.md"
+```
+
+스테이징된 변경 사항을 하나의 커밋으로 저장한다.
+
+| 명령어 | 설명 |
+|---|---|
+| `git add` | 변경 파일을 스테이징 영역에 추가 |
+| `git commit` | 변경 사항을 커밋으로 저장 |
+| `-m` | 커밋 메시지 작성 옵션 |
+
+커밋 메시지를 통해 어떤 작업을 수행했는지 기록할 수 있다.
+
+#### 3.6.4 원격 저장소 연결 확인
+
+```bash
+git remote -v
+```
+
+GitHub 원격 저장소의 주소와 연결 상태를 확인한다.
+
+확인 결과 예시:
+
+```text
+origin  https://github.com/1cando/codyssey1.git (fetch)
+origin  https://github.com/1cando/codyssey1.git (push)
+```
+
+| 항목 | 설명 |
+|---|---|
+| `origin` | 원격 저장소의 기본 이름 |
+| `fetch` | 원격 저장소의 변경 사항 가져오기 |
+| `push` | 로컬 저장소의 변경 사항 업로드 |
+
+#### 3.6.5 GitHub에 변경 사항 업로드
+
+```bash
+git push origin main
+```
+
+로컬 저장소의 `main` 브랜치에 있는 커밋을 GitHub 원격 저장소에 업로드한다.
+
+| 명령어 | 설명 |
+|---|---|
+| `git push` | 원격 저장소에 변경 사항 업로드 |
+| `origin` | 원격 저장소 이름 |
+| `main` | 업로드할 브랜치 이름 |
+
+#### 3.6.6 GitHub 원격 저장소 확인
+
+GitHub 저장소에 접속하여 업로드한 파일과 커밋 이력을 확인한다.
+
+저장소 주소:
+
+https://github.com/1cando/codyssey1
+
+확인 항목:
+
+- [x] Git 저장소 초기화 또는 기존 저장소 확인
+- [x] 변경 파일 확인
+- [x] 변경 사항 커밋
+- [x] 원격 저장소 연결 확인
+- [x] GitHub에 푸시
+- [x] 원격 저장소에서 결과 확인
+
+**사용 명령어**
+
+```bash
+git status
+git add
+git commit
+git remote -v
+git push
+```
+
+#### 3.6.7 핵심 정리
+
+- Git은 파일의 변경 이력과 버전을 관리한다.
+- GitHub는 Git 저장소를 온라인에서 관리하고 공유할 수 있도록 한다.
+- `git add`는 커밋할 파일을 스테이징 영역에 추가한다.
+- `git commit`은 변경 사항을 로컬 저장소에 기록한다.
+- `git push`는 로컬 저장소의 커밋을 원격 저장소에 업로드한다.
+
 
 ## 5. 트러블슈팅
 
