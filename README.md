@@ -45,12 +45,14 @@ git remote -v
 | 확인 | 수행 항목 | 명령어 |
 |---|---|---|
 | [x] | 현재 위치 확인 | `pwd` |
-| [x] | 파일 및 디렉터리 생성 | `mkdir`, `touch` |
+| [x] | 파일 및 폴더 생성 | `mkdir`, `touch` |
 | [x] | 파일과 폴더 목록 확인 | `ls`, `ls -al` |
+| [x] | 파일 및 폴더 이동/이름변경 | `mv` |
+| [x] | 파일 및 폴더 삭제 | `rm`, `rmdir`, `rm -r` |
 | [x] | 디렉터리 이동 | `cd` |
 | [x] | 파일 내용 확인 | `cat` |
 
-#### ① 현재 위치 확인
+#### 3.1.1 현재 위치 확인
 
 **사용 명령어:** `pwd`
 
@@ -61,7 +63,7 @@ git remote -v
 
 현재 터미널이 위치한 디렉터리의 경로를 확인한다.
 
-#### ② 파일 및 디렉터리 생성
+#### 3.1.2 파일 및 폴더 생성
 
 **사용 명령어:** `mkdir`, `touch`
 
@@ -74,7 +76,7 @@ git remote -v
 - `mkdir`: 새로운 디렉터리를 생성한다.
 - `touch`: 새로운 빈 파일을 생성한다.
 
-#### ③ 파일과 폴더 목록 확인
+#### 3.1.3 파일과 폴더 목록 확인
 
 **사용 명령어:** `ls`, `ls -al`
 
@@ -93,7 +95,53 @@ drwxr-xr-x  13 [사용자계정]  staff   416 Oct 30 00:01 .git
 - `-a`: 숨김 파일까지 표시한다.
 - `-l`: 상세 정보를 표시한다.
 
-#### ④ 디렉터리 이동
+#### 3.1.4 파일 및 폴더 이동/이름변경
+
+**사용 명령어:** `mv`
+
+```bash
+# 파일 이동
+% mv 파일명 이동할 폴더명/
+% mv docker_web.png screenshots/
+% ls
+docker_volume.png               docker_web.png                  modified_docker_volume.png      test_directory
+
+# 폴더 이동
+% mv 폴더명 이동할 경로/
+% mv test_folder screenshots/
+% ls
+docker_volume.png               docker_web.png                  modified_docker_volume.png      test_folder
+
+# 폴더 이름 변경
+% mv 기존폴더명 변경할폴더명
+% mv test_folder test_directory
+% ls
+docker_volume.png               docker_web.png                  modified_docker_volume.png      test_directory
+```
+
+#### 3.1.5 파일 및 폴더 삭제
+
+**사용 명령어:** `rm`, `rmdir`, `rm -r`
+
+```bash
+# 파일 삭제
+% rm 파일명
+% rm permission-test.txt 
+% ls
+README.md       docker          screenshots
+
+# 비어 있는 폴더 삭제
+% rmdir 폴더명 
+% rmdir test_directory
+% ls
+docker_volume.png               docker_web.png                  modified_docker_volume.png
+
+# 내용물이 있는 폴더 삭제 
+% rm -r 폴더명
+% rm -r test
+```
+
+#### 3.1.6 디렉터리 이동
 
 **사용 명령어:** `cd`
 
@@ -108,7 +156,7 @@ drwxr-xr-x  13 [사용자계정]  staff   416 Oct 30 00:01 .git
 - `cd ..`: 현재 디렉터리의 상위 디렉터리로 이동한다.
 - `cd ~`: 사용자 홈 디렉터리로 이동한다.
 
-#### ⑤ 파일 내용 확인
+#### 3.1.7 파일 내용 확인
 
 **사용 명령어:** `cat`
 
@@ -125,7 +173,7 @@ drwxr-xr-x  13 [사용자계정]  staff   416 Oct 30 00:01 .git
 
 `cat` 명령어를 사용하여 README.md 파일에 작성된 내용을 터미널에서 확인한다.
 
-#### ⑥ 절대 경로와 상대 경로
+#### 3.1.8 절대 경로와 상대 경로
 
 경로(Path)는 파일이나 디렉터리가 저장된 위치를 나타낸다.
 
@@ -169,13 +217,13 @@ cd /Users/[사용자계정]/codyssey/codyssey1
 
 ---
 
-### 3.2 파일 권한
+### 3.2 파일 및 폴더 권한
 
-파일 권한은 파일이나 디렉터리에 대해 사용자가 어떤 작업을 할 수 있는지 정하는 규칙이다.
+권한은 파일이나 디렉터리에 대해 사용자가 어떤 작업을 할 수 있는지 정하는 규칙이다.
 리눅스와 macOS에서는 기본적으로 권한을 세 가지로 구분한다.
 
-#### 3.2.1 파일 권한 표기 규칙 및 의미
-리눅스의 파일 권한은 사용자가 파일이나 디렉터리에 대해 수행할 수 있는 작업을 제한하는 기능이다.
+#### 3.2.1 권한 표기 규칙 및 의미
+리눅스의 권한은 사용자가 파일이나 디렉터리에 대해 수행할 수 있는 작업을 제한하는 기능이다.
 
 | 기호 | 숫자 | 영문 | 의미 | 설명 |
 |---|---|---|---|---|
@@ -195,8 +243,8 @@ cd /Users/[사용자계정]/codyssey/codyssey1
 - 644 권한: 소유자는 읽기와 쓰기가 가능하고 그룹과 그 외 사용자는 읽기만 가능하다. (rw-r--r--)
 
 
-#### 3.2.2 파일 권한 그룹
-파일 권한은 세 그룹으로 구분한다.
+#### 3.2.2 파일 및 폴더 권한 그룹
+권한은 세 그룹으로 구분한다.
 
 | 기호 | 영문 | 대상 | 설명 |
 |---|---|---|---|
@@ -215,14 +263,14 @@ cd /Users/[사용자계정]/codyssey/codyssey1
 | p | 파이프 | 프로세스 간 데이터 전달 |
 | s | 소켓 | 프로세스 간 통신 |
 
-#### 3.2.4 파일 권한 명령어
+#### 3.2.4 파일 및 폴더 권한 명령어
 
 | 확인 | 수행 항목 | 명령어 |
 |---|---|---|
-| [x] | 파일 권한 확인 | `ls -l` |
+| [x] | 파일 및 폴더 권한 확인 | `ls -l` |
 | [x] | 권한 변경 | `chmod` |
 
-##### ① 파일 권한 확인
+##### ① 파일 및 폴더 권한 확인
 
 **사용 명령어:** `ls -l`
 
@@ -241,17 +289,26 @@ cd /Users/[사용자계정]/codyssey/codyssey1
 % chmod 600 permission-test.txt 
 % ls -l
 -rw-------@ 1 [사용자계정]  staff     0 Oct 30 18:09 permission-test.txt
+% chmod 600 permission_test
+% ls -l
+drw-------@ 2 study  staff     64 Nov  2 23:57 permission_test
 
 % chmod 644 permission-test.txt
 % ls -l
 -rw-r--r--@ 1 [사용자계정]  staff     0 Oct 30 18:09 permission-test.txt
+% chmod 644 permission_test
+% ls -l
+drw-r--r--@ 2 study  staff     64 Nov  2 23:57 permission_test
 
 % chmod 755 permission-test.txt
 % ls -l
 -rwxr-xr-x@ 1 [사용자계정]  staff     0 Oct 30 18:09 permission-test.txt
+% chmod 755 permission_test
+% ls -l
+drwxr-xr-x@ 2 study  staff     64 Nov  2 23:57 permission_test
 ```
 
-파일의 권한을 변경한다.
+파일 및 폴더의 권한을 변경한다.
 
 ---
 
@@ -1113,6 +1170,32 @@ no changes added to commit (use "git add" and/or "git commit -a")
 
 현재 브랜치, 변경된 파일, 커밋되지 않은 파일 등의 상태를 확인할 수 있다.
 
+```bash
+% git config --list
+credential.helper=osxkeychain
+init.defaultbranch=main
+core.repositoryformatversion=0
+core.filemode=true
+core.bare=false
+core.logallrefupdates=true
+core.ignorecase=true
+core.precomposeunicode=true
+remote.origin.url=https://github.com/1cando/codyssey1.git
+remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
+branch.main.remote=origin
+branch.main.merge=refs/heads/main
+branch.main.vscode-merge-base=origin/main
+```
+깃 설정 상태를 확인한다.
+
+- init.defaultbranch=main : 기본 브랜치
+
+```bash
+% git branch
+  backup-before-squash
+* main
+```
+
 
 #### 3.6.2 변경 파일 확인 및 스테이징
 
@@ -1228,68 +1311,77 @@ https://github.com/1cando/codyssey1
 
 ## 5. 트러블슈팅
 
-### 5.1 문제 1: [실제로 발생한 문제]
+## 5.1 문제 1: Docker 명령어 실행 오류
 
 **문제 상황**
 
-[오류 메시지 또는 예상과 다르게 동작한 상황을 작성한다.]
+터미널에서 `docker --version` 명령어를 실행했을 때 `zsh: command not found: docker` 오류가 발생했다.
 
 **원인 가설**
 
-[권한 문제, 설정 오류, 경로 문제 등 가능한 원인을 작성한다.]
+Docker가 설치되지 않았거나 Docker 실행 파일이 저장된 경로가 환경 변수 `PATH`에 등록되지 않았을 가능성이 있다고 판단했다.
 
 **확인 과정**
 
 ```bash
-[문제 원인을 확인하기 위해 실제로 실행한 명령어]
+ls /Applications/Docker.app/Contents/Resources/bin/
+echo $PATH
 ```
 
-[명령어 실행 결과와 이를 통해 확인한 사실을 작성한다.]
+Docker 실행 파일이 설치된 경로에 존재하는지 확인하고, 해당 경로가 `PATH`에 등록되어 있는지 확인했다.
 
 **해결 방법**
 
-[실제로 적용한 해결 방법과 변경 내용을 작성한다.]
+Docker 실행 파일이 위치한 경로를 `~/.zshrc` 파일에 추가했다.
+
+```bash
+echo 'export PATH="/Applications/Docker.app/Contents/Resources/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+```
 
 **해결 결과**
 
-[문제가 해결되었는지 확인한 명령어와 결과를 작성한다.]
+```bash
+docker --version
+```
 
-### 5.2 문제 2: [실제로 발생한 문제]
+Docker 버전 정보가 정상적으로 출력되는 것을 확인했다.
+
+
+## 5.2 문제 2: Dockerfile 디렉토리 이동 오류
 
 **문제 상황**
 
-[문제 및 오류 메시지]
+터미널에서 다음 명령어를 실행했을 때 오류가 발생했다.
+
+```bash
+% cd Dockerfile 
+cd: not a directory: Dockerfile
+```
 
 **원인 가설**
 
-[예상 원인]
+`cd` 명령어는 디렉토리(폴더)로 이동할 때 사용하는 명령어이다. `Dockerfile`은 디렉토리가 아닌 파일이므로 해당 명령어로 이동할 수 없다고 판단했다.
 
 **확인 과정**
 
 ```bash
-[실제로 실행한 명령어]
+ls -l
 ```
 
-[확인 결과]
+현재 디렉토리의 파일 및 폴더 목록을 확인하여 `Dockerfile`이 일반 파일로 존재하는지 확인했다.
 
 **해결 방법**
 
-[실제로 적용한 해결 방법 또는 대안]
+`Dockerfile`이 위치한 폴더로 이동한 후 파일 내용을 확인하는 방법을 사용했다.
+
+```bash
+cd docker
+cat Dockerfile
+```
+
+`cat` 명령어를 사용하여 Dockerfile의 내용을 터미널에서 확인했다.
 
 **해결 결과**
 
-[재검증 결과]
-
-## 6. 결과물 위치
-
-- GitHub 저장소: https://github.com/1cando/codyssey1
-- 기술문서: https://github.com/1cando/codyssey1/README.md
-- Dockerfile: [파일 링크]
-- 실행 결과 및 스크린샷: [결과 파일 또는 디렉터리 링크]
-- 기타 산출물: [해당 파일 링크]
-
-## 7. 수행 결과 요약
-
-본 미션에서는 [실제로 완료한 작업]을 수행하였다. 각 작업은 [사용한 검증 명령어 또는 방법]을 통해 확인하였다.
-
-수행 과정에서 발생한 [실제 문제]는 [해결 방법]을 적용하여 해결하였으며, 최종 결과물은 GitHub 저장소에서 확인할 수 있다.
+`docker` 디렉토리로 정상적으로 이동했으며, `cat Dockerfile` 명령어를 통해 Dockerfile의 내용을 확인했다.
