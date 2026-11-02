@@ -638,14 +638,11 @@ http://localhost:8080
 - [x] 볼륨 또는 디렉터리 마운트 설정
 - [x] 데이터 유지 여부 확인
 
-### 3.5 포트 및 볼륨
-
 #### 1. 포트 매핑 (Port Mapping)
 
 **포트 매핑이란?**
 
 컨테이너 내부에서 실행되는 서비스에 호스트 컴퓨터가 접근할 수 있도록 포트를 연결하는 기능이다.
-
 컨테이너는 독립된 네트워크 환경에서 실행되므로 외부에서 접근하려면 포트 매핑 설정이 필요하다.
 
 **사용 명령어**
@@ -653,44 +650,286 @@ http://localhost:8080
 ```bash
 docker run -d --name codyssey-container -p 8080:80 codyssey-web:v1
 ```
+여기서 -p 8080:80이 포트 매핑이다.
+- 8080: 내 컴퓨터에서 사용하는 포트
+- 80: 컨테이너 내부의 Nginx가 사용하는 포트
+
+컨테이너는 독립된 환경에서 실행되기 때문에 컨테이너 내부의 포트가 내 컴퓨터에 자동으로 공개되는 것이 아니므로 포트 매핑을 해줘야 내 컴퓨터의 브라우저에서 컨테이너 안의 웹 서버에 접속할 수 있다.
 
 | 옵션 | 설명 |
 |---|---|
 | `-d` | 컨테이너를 백그라운드에서 실행 |
 | `--name` | 컨테이너 이름 지정 |
 | `-p 8080:80` | 호스트의 8080번 포트와 컨테이너의 80번 포트 연결 |
+| `codyssey-web` | 이미지 이름 |
+| `v1` | 이미지 버전(Tag) |
 
 **포트 매핑 결과 확인**
 
 ```bash
-docker port codyssey-container
-```
-
-실행 결과 예시:
-
-```text
+% docker port codyssey-container 
 80/tcp -> 0.0.0.0:8080
+80/tcp -> [::]:8080
 ```
-
 컨테이너의 80번 포트가 호스트의 8080번 포트에 연결된 것을 확인할 수 있다.
 
-상세 설정 확인:
+
+**상세 설정 확인**
 
 ```bash
-docker inspect codyssey-container
+% docker inspect codyssey-container
+[
+    {
+        "Id": "5a42650d04b430913e6042b47dcf9182a18239656656ffe24f68dc6a2b7eab3b",
+        "Created": "2026-10-30T11:51:55.985151667Z",
+        "Path": "/docker-entrypoint.sh",
+        "Args": [
+            "nginx",
+            "-g",
+            "daemon off;"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 608,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-11-01T14:43:24.634908676Z",
+            "FinishedAt": "2026-10-30T12:05:33.86516567Z"
+        },
+        "Image": "sha256:d20d2b57f685e2df5aa78c65048ea0c42f864659780b85a60b3cb11f6773a664",
+        "ResolvConfPath": "/var/lib/docker/containers/5a42650d04b430913e6042b47dcf9182a18239656656ffe24f68dc6a2b7eab3b/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/5a42650d04b430913e6042b47dcf9182a18239656656ffe24f68dc6a2b7eab3b/hostname",
+        "HostsPath": "/var/lib/docker/containers/5a42650d04b430913e6042b47dcf9182a18239656656ffe24f68dc6a2b7eab3b/hosts",
+        "LogPath": "",
+        "Name": "/codyssey-container",
+        "RestartCount": 0,
+        "Driver": "overlayfs",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "local",
+                "Config": {}
+            },
+            "NetworkMode": "bridge",
+            "PortBindings": {
+                "80/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "8080"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                12,
+                143
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": [],
+            "BlkioDeviceReadBps": [],
+            "BlkioDeviceWriteBps": [],
+            "BlkioDeviceReadIOps": [],
+            "BlkioDeviceWriteIOps": [],
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "Storage": {
+            "RootFS": {
+                "Snapshot": {
+                    "Name": "overlayfs"
+                }
+            }
+        },
+        "Mounts": [],
+        "Config": {
+            "Hostname": "5a42650d04b4",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "80/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NGINX_VERSION=1.31.8",
+                "PKG_RELEASE=1",
+                "DYNPKG_RELEASE=1",
+                "NJS_VERSION=1.0.2",
+                "NJS_RELEASE=1",
+                "ACME_VERSION=0.4.1"
+            ],
+            "Cmd": [
+                "nginx",
+                "-g",
+                "daemon off;"
+            ],
+            "Image": "codyssey-web:v1",
+            "Volumes": null,
+            "WorkingDir": "/",
+            "Entrypoint": [
+                "/docker-entrypoint.sh"
+            ],
+            "Labels": {
+                "maintainer": "NGINX Docker Maintainers \u003cdocker-maint@nginx.com\u003e"
+            },
+            "StopSignal": "SIGQUIT"
+        },
+        "NetworkSettings": {
+            "SandboxID": "3081a03f3297443f29c14ce66e786d470be901ef168b8ec8fc5dfd80ba27feff",
+            "SandboxKey": "/var/run/docker/netns/3081a03f3297",
+            "Ports": {
+                "80/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "8080"
+                    },
+                    {
+                        "HostIp": "::",
+                        "HostPort": "8080"
+                    }
+                ]
+            },
+            "Networks": {
+                "bridge": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "19db3dae0772d040b4d1fe1c194e4d1243604f0b4e7399f92c7bff55cf0079be",
+                    "EndpointID": "6adb3216a7949e9e7c8d4d0160c4b9d56ba598ba956eb473e1b78ab5c4e30456",
+                    "Gateway": "172.17.0.1",
+                    "IPAddress": "172.17.0.2",
+                    "MacAddress": "4a:e5:76:66:dc:ba",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": null
+                }
+            }
+        },
+        "ImageManifestDescriptor": {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "digest": "sha256:0a5059bae661b8754109149c91e0763938c41616544acc234a7a1e8bb7445ab7",
+            "size": 1997,
+            "platform": {
+                "architecture": "arm64",
+                "os": "linux"
+            }
+        }
+    }
+]
 ```
+
+**포트정보만 확인**
+
+```bash
+% docker inspect --format='{{json .NetworkSettings.Ports}}' codyssey-container
+{"80/tcp":[{"HostIp":"0.0.0.0","HostPort":"8080"},{"HostIp":"::","HostPort":"8080"}]}
+```
+
 
 #### 2. 볼륨 및 디렉터리 마운트 (Volume & Bind Mount)
 
 **볼륨이란?**
 
-컨테이너의 데이터와 저장 공간을 분리하여 데이터를 지속적으로 보관할 수 있도록 하는 기능이다.
-
+Docker가 관리하는 별도의 저장 공간으로 컨테이너의 데이터와 저장 공간을 분리하여 데이터를 지속적으로 보관할 수 있도록 하는 기능이다. 
 컨테이너가 삭제되더라도 별도로 관리되는 볼륨이나 호스트 디렉터리에 저장된 데이터는 유지할 수 있다.
 
 **바인드 마운트란?**
 
 호스트 컴퓨터의 특정 디렉터리를 컨테이너 내부의 디렉터리와 연결하는 방식이다.
+
+- 바인드 마운트 예시
+내 컴퓨터 docker/volume-data/ (실제 파일이 저장되는 폴더)와 Docker 컨테이너 /usr/share/nginx/html/ (컨테이너에서 접근하는 경로)가 연결
+컨테이너를 삭제하더라도 내 컴퓨터의 원본 폴더는 삭제되지 않아 나중에 새 컨테이너를 만들어 같은 폴더에 연결하면 기존 파일을 사용할 수 있다.
 
 **실습 디렉터리 생성**
 
@@ -728,30 +967,43 @@ docker run -d \
 
 | 옵션 | 설명 |
 |---|---|
-| `-v` | 호스트 디렉터리와 컨테이너 디렉터리 연결 |
+| `docker run` | 컨테이너 생성 및 실행 |
+| `-d` | 백그라운드에서 실행 |
+| `--name` | 컨테이너 이름 지정 |
+| `-p 8081:80` | 포트 매핑 |
+| `-v` | 호스트 디렉터리와 컨테이너 디렉터리 연결(디렉터리 마운트) |
 | `$(pwd)` | 현재 작업 디렉터리의 절대 경로 |
 | `docker/volume-data` | 호스트 컴퓨터의 디렉터리 |
 | `/usr/share/nginx/html` | 컨테이너 내부의 디렉터리 |
+| `codyssey-web:v1` | 사용할 이미지 |
 
 **마운트 결과 확인**
 
 ```bash
-docker inspect --format='{{json .Mounts}}' codyssey-volume-container
+% docker inspect --format='{{json .Mounts}}' codyssey-volume-container
+[{"Type":"bind","Source":"/Users/study/codyssey/codyssey1/docker/volume-data","Destination":"/usr/share/nginx/html","Mode":"","RW":true,"Propagation":"rprivate"}]
 ```
 
 **웹페이지 접속 확인**
 
 http://localhost:8081
 
+
 브라우저에서 `Hello, Docker Volume!`이 표시되는지 확인한다.
+
+**실행 결과**
+
+![docker web](screenshots/docker_volume.png)
 
 #### 3. 데이터 영속성 확인
 
-- [ ] 호스트 디렉터리의 HTML 파일 수정
-- [ ] 브라우저에서 변경된 내용 확인
-- [ ] 컨테이너 중지 및 삭제
-- [ ] 호스트 디렉터리에 원본 파일이 유지되는지 확인
-- [ ] 새 컨테이너에 동일한 디렉터리를 마운트하여 데이터 재사용 확인
+- [x] 호스트 디렉터리의 HTML 파일 수정
+- [x] 브라우저에서 변경된 내용 확인
+- [x] 컨테이너 중지 및 삭제
+- [x] 호스트 디렉터리에 원본 파일이 유지되는지 확인
+- [x] 새 컨테이너에 동일한 디렉터리를 마운트하여 데이터 재사용 확인
+
+컨테이너 내부에만 파일을 저장하면 컨테이너를 삭제할 때 그 파일도 함께 사라질 수 있다. 하지만 호스트 컴퓨터 내의 폴더를 연결해 놓으면 컨테이너를 삭제하더라도 원본 파일은 호스트 디렉터리에 남아 있으므로 더이터의 영속성을 확보할 수 있다.
 
 **핵심 정리**
 
@@ -759,13 +1011,71 @@ http://localhost:8081
 - 볼륨은 컨테이너의 생명주기와 데이터를 분리하여 영속적으로 보관할 수 있도록 한다.
 - 바인드 마운트는 호스트의 실제 디렉터리와 컨테이너 내부 디렉터리를 연결한다.
 
-**사용 명령어**
+
+**호스트 디렉터리의 HTML 파일 수정**
 
 ```bash
-docker run
-docker port
-docker inspect
+% open -e docker/volume-data/index.html
+
+% cat docker/volume-data/index.html 
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2775.1">
+  <style type="text/css">
+    p.p2 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px AppleMyungjo; -webkit-text-stroke: #000000}
+    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px AppleMyungjo; color: #fec3ba; -webkit-text-stroke: #ffffff}
+    p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px AppleMyungjo; -webkit-text-stroke: #000000; min-height: 14.0px}
+    p.p5 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px AppleMyungjo; -webkit-text-stroke: #000000; min-height: 14.0px}
+    span.s1 {font-kerning: none}
+  </style>
+</head>
+<body>
+<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px AppleMyungjo; -webkit-text-stroke: #000000"><span class="s1">Hello, Docker Volume!</span></h1>
+<p class="p2"><span class="s1">This file is stored on my MacBook.</span></p>
+<p class="p3"><span class="s1">My HTML has been changed!</span></p>
+<p class="p4"><span class="s1"></span><br></p>
+<p class="p5"><span class="s1"></span><br></p>
+<p class="p5"><span class="s1"></span><br></p>
+</body>
+</html>
 ```
+
+브라우저에서 `My HTML has been changed!`이 표시되는지 확인한다.
+
+**실행 결과**
+
+![docker web](screenshots/modified_docker_volume.png)
+
+
+**컨테이너 중지 및 삭제**
+```bash
+% docker stop codyssey-volume-container
+codyssey-volume-container
+
+% docker rm codyssey-volume-container
+codyssey-volume-container
+```
+
+
+**호스트 디렉터리에 원본 파일 유지**
+```bash
+% ls -l docker/volume-data
+total 8
+-rw-r--r--@ 1 study  staff  1351 Nov  2 17:21 index.html
+```
+index.html이 그대로 남아 있다. (호스트 디렉터리의 데이터 유지)
+
+**새 컨테이너에 동일한 디렉터리를 마운트하여 데이터 재사용**
+```bash
+% docker run -d --name codyssey-volume-test -p 8081:80 -v "$(pwd)/docker/volume-data:/usr/share/nginx/html" codyssey-web:v1
+10320ecb7581933eb4fd9cc84a7221b08436c9f177dccc52609442deb70927d0
+```
+
 
 ### 3.6 Git 및 GitHub
 - [x] Git 저장소 초기화 또는 기존 저장소 확인
