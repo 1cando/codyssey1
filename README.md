@@ -23,7 +23,7 @@
 | 호스트 운영체제(OS) | macOS 27.0 |
 | 컨테이너 운영체제(OS) | Ubuntu (Docker Container) |
 | 쉘(Shell) | /bin/zsh (macOS), Bash (Ubuntu) |
-| 터미널 | macOS Terminal, VS Code 통합 터미널, Docker Ubuntu 터미널 |
+| 터미널 | macOS Terminal, VS Code 통합 터미널 |
 | Docker | 29.9.2 |
 | Git | git version 2.54.0 (Apple Git-157) |
 | GitHub | https://github.com/1cando/codyssey1 |
@@ -1221,6 +1221,7 @@ total 8
 | 코드 | 의미 |
 |---|---|
 | -h | 파일 크기를 읽기 쉬운 단위로 표시 |
+
 1.0K는 백업 파일 크기
 
 **복원 방법**
