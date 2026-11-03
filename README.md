@@ -19,10 +19,11 @@
 
 | 항목 | 환경 |
 |---|---|
-| 운영체제(OS) | macOS [27.0] |
-| 쉘(Shell) | /bin/zsh |
+| 호스트 운영체제(OS) | macOS 27.0 |
+| 컨테이너 운영체제(OS) | Ubuntu (Docker Container) |
+| 쉘(Shell) | /bin/zsh (macOS), Bash (Ubuntu), Docker Ubuntu 터미널 |
 | 터미널 | macOS Terminal, VS Code 통합 터미널 |
-| Docker | [29.9.2] |
+| Docker | 29.9.2 |
 | Git | git version 2.54.0 (Apple Git-157) |
 | GitHub | https://github.com/1cando/codyssey1 |
 
@@ -351,6 +352,37 @@ Client:
   agent: Docker AI Agent Runner (Docker Inc.)
     Version:  v1.152.0
     Path:     /Users/[사용자계정]/.docker/cli-plugins/docker-agent
+
+# Docker hello-world 실행 테스트 (Docker 설치 및 Docker Engine의 정상 작동 여부 확인)
+% docker run hello-world
+Unable to find image 'hello-world:latest' locally
+latest: Pulling from library/hello-world
+58dee6a49ef1: Pull complete 
+c3bdf82c34d1: Download complete 
+Digest: sha256:c567b231f65614688711a75f31518a064258a51d442117a3e771a3a8fdba78ef
+Status: Downloaded newer image for hello-world:latest
+
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+    (arm64v8)
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+
+To try something more ambitious, you can run an Ubuntu container with:
+ $ docker run -it ubuntu bash
+
+Share images, automate workflows, and more with a free Docker ID:
+ https://hub.docker.com/
+
+For more examples and ideas, visit:
+ https://docs.docker.com/get-started/
+
 ```
 
 #### 3.3.3 이미지 조회 및 관리
@@ -1136,6 +1168,89 @@ index.html이 그대로 남아 있다. (호스트 디렉터리의 데이터 유�
 10320ecb7581933eb4fd9cc84a7221b08436c9f177dccc52609442deb70927d0
 ```
 
+#### 4. Docker 데이터 백업 및 복원 전략
+
+**백업 목적**
+
+컨테이너 삭제, 데이터 손상 및 시스템 오류로 인한 데이터 손실에 대비하기 위해 호스트 디렉터리에 저장된 데이터를 별도로 백업한다.
+
+**명령어**
+tar -czf → 폴더를 압축해서 백업
+ls -lh → 백업 파일 확인
+mkdir -p → 복원할 폴더 만들기
+tar -xzf → 압축된 백업 파일 풀기
+
+**백업 대상**
+
+```text
+docker/volume-data/
+```
+
+**백업 방법**
+
+백업 디렉터리를 생성하고 호스트 디렉터리의 데이터를 날짜별 압축 파일로 저장한다.
+
+```bash
+% mkdir -p backups
+
+% tar -czf "backups/volume-data-$(date +%Y%m%d-%H%M%S).tar.gz" -C docker volume-data
+```
+
+| 코드 | 의미 |
+|---|---|
+| -p | 상위 폴더까지 필요하면 함께 생성하고, 이미 폴더가 있어도 오류를 내지 않음 |
+| tar | 파일과 폴더를 묶거나 압축하는 명령어 |
+| -c | 새로운 압축 파일 생성(Create) |
+| -z | gzip 방식으로 압축 |
+| -f | 생성할 파일 이름 지정(File) |
+| backups/ | 백업 파일을 저장할 폴더 |
+| volume-data- | 백업 파일 이름 | 
+| $(date ...) | 현재 날짜와 시간을 파일 이름에 넣음 |
+| -C docker | 작업 기준 위치를 docker 폴더로 변경 |
+| volume-data | 백업할 대상 폴더 | 
+
+
+**백업 확인**
+
+```bash
+% ls -lh backups/
+total 8
+-rw-r--r--@ 1 study  staff   1.0K Nov  3 13:17 volume-data-20261103-131737.tar.gz
+```
+| 코드 | 의미 |
+|---|---|
+| -h | 파일 크기를 읽기 쉬운 단위로 표시 |
+1.0K는 백업 파일 크기
+
+**복원 방법**
+
+```bash
+% mkdir -p restore-test
+
+tar -xzf backups/백업파일명.tar.gz -C restore-test
+% tar -xzf backups/volume-data-20261103-131737.tar.gz -C restore-test
+```
+
+복원된 디렉터리와 파일을 확인하여 데이터가 정상적으로 복구되었는지 점검한다.
+
+| 코드 | 의미 |
+|---|---|
+| -x | 압축 해제(Extract) |
+| -z | gzip 방식의 압축 해제 |
+| -f | 압축 해제할 파일 지정 |
+| backups/백업파일명.tar.gz | 실제 백업 파일 경로 |
+| -C restore-test | 압축을 풀 위치 지정 |
+
+
+**백업 관리 전략**
+
+- 정기적으로 호스트 디렉터리의 데이터를 백업한다.
+- 날짜별 백업 파일을 구분하여 보관한다.
+- 중요한 데이터는 외장 저장장치 또는 클라우드에도 별도로 보관한다.
+- 백업 파일의 정상적인 복원 여부를 주기적으로 확인한다.
+
+컨테이너와 데이터 저장 공간을 분리하고, 백업 파일을 별도로 보관하여 데이터 손실 위험을 줄인다.
+
 
 ### 3.6 Git 및 GitHub
 - [x] Git 저장소 초기화 또는 기존 저장소 확인
@@ -1299,19 +1414,108 @@ GitHub 저장소에 접속하여 업로드한 파일과 커밋 이력을 확인�
 
 https://github.com/1cando/codyssey1
 
+#### 3.6.7 GitHub SSH 키 설정
 
-#### 3.6.7 핵심 정리
+- HTTPS와 SSH의 인증 방식 차이 이해
+- 공개키와 개인키의 역할 이해
+- SSH 키를 이용한 GitHub 인증 설정
+- 개인키를 안전하게 관리하는 보안 습관 학습
+
+[x] 기존 SSH 키 확인
+[x] Ed25519 SSH 키 생성
+[x] SSH 에이전트에 개인키 등록
+[x] GitHub에 공개키 등록
+[x] SSH 연결 테스트 성공
+[x] 원격 저장소 주소를 HTTPS에서 SSH로 변경
+[x] SSH 방식으로 Push 테스트 성공
+
+**HTTPS와 SSH의 차이**
+| 구분 | HTTPS | SSH |
+|---|---|---|
+| 연결 방식 | HTTPS 주소 | SSH 주소 | 
+| 인증 | 로그인 및 인증 토큰 등 | SSH 키 쌍 |
+| 주소 예시 | https://github.com/[깃주소].git | git@github.com:[깃주소].git |
+| 특징 | 접근하기 쉽고 익숙함 | 키 등록 후 반복 인증이 편리함 |
+
+SSH는 공개키와 개인키를 사용하는 방식
+- 공개키(Public Key): GitHub에 등록하는 키
+- 개인키(Private Key): 내 Mac에 안전하게 보관하는 키
+
+##### 1) SSH 키 생성 및 확인
+
+```bash
+# SSH 키 생성하기
+% ssh-keygen -t ed25519 -C "GitHub에 등록한 이메일"
+
+# 저장 위치 확인
+Enter file in which to save the key ([위치 ssh]):
+
+# 비밀번호 설정
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+
+# 기존 SSH 키 확인
+% ls -al ~/.ssh
+
+# SSH 에이전트에 개인키 등록
+% eval "$(ssh-agent -s)"
+```
+
+##### 2) GitHub 공개키 등록
+
+```bash
+# 공개키 복사
+% pbcopy < ~/.ssh/id_ed25519.pub
+```
+- 공개키 복사
+
+
+##### 3) SSH 연결 확인
+
+```bash
+ssh -T git@github.com
+```
+- 확인 결과: `You've successfully authenticated` 메시지가 출력되면 인증 성공
+
+##### 4) GitHub 저장소 연결 방식 변경
+
+```bash
+# 기존 HTTPS 원격 저장소 주소 확인
+% git remote -v
+origin  https://github.com/[주소].git (fetch)
+origin  https://github.com/[주소].git (push)
+
+# SSH 주소로 변경
+% git remote set-url origin git@github.com:[주소].git
+
+# 변경 결과 확인
+% git remote -v
+origin  git@github.com:[주소].git (fetch)
+origin  git@github.com:[주소].git (push)
+```
+
+
+##### 5) SSH 방식으로 Push 테스트
+
+```bash
+git push origin main
+```
+
+- SSH 인증을 통해 GitHub 저장소에 접근하고 코드 전송 여부 확인
+
+
+#### 3.6.8 핵심 정리
 
 - Git은 파일의 변경 이력과 버전을 관리한다.
 - GitHub는 Git 저장소를 온라인에서 관리하고 공유할 수 있도록 한다.
 - `git add`는 커밋할 파일을 스테이징 영역에 추가한다.
 - `git commit`은 변경 사항을 로컬 저장소에 기록한다.
 - `git push`는 로컬 저장소의 커밋을 원격 저장소에 업로드한다.
-
+- SSH를 설정한다.
 
 ## 5. 트러블슈팅
 
-## 5.1 문제 1: Docker 명령어 실행 오류
+## 문제 1: Docker 명령어 실행 오류
 
 **문제 상황**
 
@@ -1348,7 +1552,7 @@ docker --version
 Docker 버전 정보가 정상적으로 출력되는 것을 확인했다.
 
 
-## 5.2 문제 2: Dockerfile 디렉토리 이동 오류
+## 문제 2: Dockerfile 디렉토리 이동 오류
 
 **문제 상황**
 
@@ -1385,3 +1589,71 @@ cat Dockerfile
 **해결 결과**
 
 `docker` 디렉토리로 정상적으로 이동했으며, `cat Dockerfile` 명령어를 통해 Dockerfile의 내용을 확인했다.
+
+
+## 문제 3: 포트 충돌 진단 및 해결 방법
+
+**문제 상황**
+
+Docker 컨테이너 실행 시 호스트 포트가 이미 다른 프로세스에서 사용 중이면 포트 충돌이 발생할 수 있다.
+
+```dash
+% docker run -d -p 8081:80 nginx
+07d8a410615c2ec09fd4988d55e61395bddc7b0f698d9e30919f2b5458d3a450
+docker: Error response from daemon: failed to set up container networking: driver failed programming external connectivity on endpoint goofy_antonelli (bd2a2013f875ce1bf2c50eb75361d9697fa9b25d7dda3a25156da8c23a8ab5f2): Bind for 0.0.0.0:8081 failed: port is already allocated
+
+Run 'docker run --help' for more information
+
+What's next:
+    Debug this container error with Gordon → docker ai "help me fix this container error"
+```
+
+**확인 과정**
+
+```bash
+% docker ps
+CONTAINER ID   IMAGE             COMMAND                  CREATED       STATUS         PORTS                                     NAMES
+10320ecb7581   codyssey-web:v1   "/docker-entrypoint.…"   8 hours ago   Up 2 minutes   0.0.0.0:8081->80/tcp, [::]:8081->80/tcp   codyssey-volume-test
+
+% netstat -an | grep 8081
+tcp46      0      0  *.8081                 *.*                    LISTEN 
+
+% lsof -nP -iTCP:8081 -sTCP:LISTEN
+COMMAND     PID  USER   FD   TYPE            DEVICE SIZE/OFF NODE NAME
+com.docke 22371 study  130u  IPv6 0x7e3772a9046ccde      0t0  TCP *:8081 (LISTEN)
+```
+
+`lsof` 명령어를 사용하여 8081 포트를 사용 중인 프로세스와 PID를 확인한다.
+- COMMAND: 포트를 사용 중인 프로그램
+- PID: 프로세스 번호
+- TCP *:8081: 8081 포트를 사용 중이라는 의미
+
+**네트워크 상태 확인**
+| 명령어 | 주요 역할 |
+|---|---|
+| netstat | 네트워크 연결과 포트 상태 확인 |
+| lsof | 포트를 사용 중인 프로세스 확인 |
+| docker ps | 실행 중인 Docker 컨테이너와 포트 확인 |
+
+**해결 방법**
+
+종료해도 안전한 프로세스인지 확인한 후 해당 PID를 종료한다.
+
+```bash
+# 특정 프로그램이나 프로세스 종료
+% kill PID
+% kill 22371
+
+# 강제종료
+% kill -9 PID
+```
+
+또는 기존 포트 대신 다른 포트를 사용한다.
+
+```bash
+docker run -d --name nginx-test -p 8082:80 nginx
+```
+
+**해결 결과**
+
+포트 사용 여부를 다시 확인하고, 사용 가능한 포트를 지정하여 Docker 컨테이너를 실행할 수 있다.
