@@ -14,6 +14,7 @@
 - 포트 및 볼륨 설정과 검증
 - Git을 이용한 버전 관리
 - GitHub 저장소 생성 및 작업 결과 업로드
+- Git SSH 보안 설정
 
 ## 2. 실행 환경
 
@@ -21,8 +22,8 @@
 |---|---|
 | 호스트 운영체제(OS) | macOS 27.0 |
 | 컨테이너 운영체제(OS) | Ubuntu (Docker Container) |
-| 쉘(Shell) | /bin/zsh (macOS), Bash (Ubuntu), Docker Ubuntu 터미널 |
-| 터미널 | macOS Terminal, VS Code 통합 터미널 |
+| 쉘(Shell) | /bin/zsh (macOS), Bash (Ubuntu) |
+| 터미널 | macOS Terminal, VS Code 통합 터미널, Docker Ubuntu 터미널 |
 | Docker | 29.9.2 |
 | Git | git version 2.54.0 (Apple Git-157) |
 | GitHub | https://github.com/1cando/codyssey1 |
@@ -1498,7 +1499,16 @@ origin  git@github.com:[주소].git (push)
 ##### 5) SSH 방식으로 Push 테스트
 
 ```bash
-git push origin main
+% git push origin main
+Enumerating objects: 10, done.
+Counting objects: 100% (10/10), done.
+Delta compression using up to 15 threads
+Compressing objects: 100% (6/6), done.
+Writing objects: 100% (8/8), 6.09 KiB | 6.09 MiB/s, done.
+Total 8 (delta 1), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+To github.com:1cando/codyssey1.git
+   f50f78f..20043ec  main -> main
 ```
 
 - SSH 인증을 통해 GitHub 저장소에 접근하고 코드 전송 여부 확인
