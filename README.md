@@ -48,11 +48,12 @@ git remote -v
 |---|---|---|
 | [x] | 현재 위치 확인 | `pwd` |
 | [x] | 파일 및 폴더 생성 | `mkdir`, `touch` |
-| [x] | 파일과 폴더 목록 확인 | `ls`, `ls -al` |
+| [x] | 파일 및 폴더 목록 확인 | `ls`, `ls -al` |
 | [x] | 파일 및 폴더 이동/이름변경 | `mv` |
 | [x] | 파일 및 폴더 삭제 | `rm`, `rmdir`, `rm -r` |
 | [x] | 디렉터리 이동 | `cd` |
 | [x] | 파일 내용 확인 | `cat` |
+| [x] | 파일 및 폴더 복사 | `cp`, `cp -r` |
 
 #### 3.1.1 현재 위치 확인
 
@@ -114,11 +115,16 @@ docker_volume.png               docker_web.png                  modified_docker_
 % ls
 docker_volume.png               docker_web.png                  modified_docker_volume.png      test_folder
 
+# 파일 이름 변경
+% mv 기존파일명 변경할파일명
+% mv test.txt test1.txt
+
 # 폴더 이름 변경
 % mv 기존폴더명 변경할폴더명
 % mv test_folder test_directory
 % ls
 docker_volume.png               docker_web.png                  modified_docker_volume.png      test_directory
+
 ```
 
 #### 3.1.5 파일 및 폴더 삭제
@@ -174,6 +180,21 @@ docker_volume.png               docker_web.png                  modified_docker_
 ```
 
 `cat` 명령어를 사용하여 README.md 파일에 작성된 내용을 터미널에서 확인한다.
+
+#### 3.1.8 파일 및 폴더 복사
+
+**사용 명령어:** `cp`, `cp -r`
+```bash
+# 파일 복사
+% cp 원본파일.txt 복사본파일.txt
+% cp hello.txt hello-copy.txt
+
+#파일을 다른 폴더로 복사
+% cp hello.txt backup/
+
+# 폴더를 복사 (폴더 안의 파일과 하위 폴더까지 복사됨)
+% cp -r original-folder backup-folder
+```
 
 #### 3.1.8 절대 경로와 상대 경로
 
@@ -236,10 +257,10 @@ cd /Users/[사용자계정]/codyssey/codyssey1
 
 각 숫자를 더하여 권한을 표현한다.
 
-7 = 4 + 2 + 1 = rwx
-6 = 4 + 2 = rw-
-5 = 4 + 1 = r-x
-4 = 4 = r--
+- 7 = 4 + 2 + 1 = rwx
+- 6 = 4 + 2 = rw-
+- 5 = 4 + 1 = r-x
+- 4 = 4 = r--
 
 - 755 권한: 소유자는 읽기, 쓰기, 실행이 가능하고 그룹과 그 외 사용자는 읽기와 실행이 가능하다. (rwxr-xr-x)
 - 644 권한: 소유자는 읽기와 쓰기가 가능하고 그룹과 그 외 사용자는 읽기만 가능하다. (rw-r--r--)
@@ -248,11 +269,11 @@ cd /Users/[사용자계정]/codyssey/codyssey1
 #### 3.2.2 파일 및 폴더 권한 그룹
 권한은 세 그룹으로 구분한다.
 
-| 기호 | 영문 | 대상 | 설명 |
-|---|---|---|---|
-| u | User | 파일 소유자 | 모든 권한 가능 | 
-| g | Group | 파일이 속한 그룹 | 읽기와 실행 가능 |
-| o | Others | 그 외 모든 사용자 | 읽기만 가능 |
+| 기호 | 영문 | 대상 |
+|---|---|---|
+| u | User | 파일 소유자 | 
+| g | Group | 파일이 속한 그룹 | 
+| o | Others | 그 외 모든 사용자 | 
 
 #### 3.2.3 맨 앞 문자 종류
 | 기호 | 종류 | 의미 |
@@ -293,21 +314,21 @@ cd /Users/[사용자계정]/codyssey/codyssey1
 -rw-------@ 1 [사용자계정]  staff     0 Oct 30 18:09 permission-test.txt
 % chmod 600 permission_test
 % ls -l
-drw-------@ 2 study  staff     64 Nov  2 23:57 permission_test
+drw-------@ 2 [사용자계정]  staff     64 Nov  2 23:57 permission_test
 
 % chmod 644 permission-test.txt
 % ls -l
 -rw-r--r--@ 1 [사용자계정]  staff     0 Oct 30 18:09 permission-test.txt
 % chmod 644 permission_test
 % ls -l
-drw-r--r--@ 2 study  staff     64 Nov  2 23:57 permission_test
+drw-r--r--@ 2 [사용자계정]  staff     64 Nov  2 23:57 permission_test
 
 % chmod 755 permission-test.txt
 % ls -l
 -rwxr-xr-x@ 1 [사용자계정]  staff     0 Oct 30 18:09 permission-test.txt
 % chmod 755 permission_test
 % ls -l
-drwxr-xr-x@ 2 study  staff     64 Nov  2 23:57 permission_test
+drwxr-xr-x@ 2 [사용자계정]  staff     64 Nov  2 23:57 permission_test
 ```
 
 파일 및 폴더의 권한을 변경한다.
@@ -594,6 +615,11 @@ EOF
 
 COPY는 docker/app/index.html을 Docker 이미지 안의 /usr/share/nginx/html/ 폴더로 복사한다.
 
+- Nginx = 웹 서버
+- Alpine = 가벼운 리눅스 운영체제
+- nginx:alpine = Alpine Linux를 기반으로 만든 Nginx 이미지
+
+
 **docker 파일 확인**
 
 ```bash
@@ -628,7 +654,7 @@ EXPOSE 80
 - `-t`: 이미지 이름과 태그 지정
 - `codyssey-web`: 생성할 이미지 이름
 - `v1`: 이미지 버전
-- `./docker`: Dockerfile이 위치한 디렉터리
+- `./docker`: 빌드 컨텍스트의 위치(COPY 등에 사용할 파일을 가져올 수 있는 기준 폴더)
 
 **실행 결과**
 ```text
@@ -731,7 +757,7 @@ http://localhost:8080
 - [x] 볼륨 또는 디렉터리 마운트 설정
 - [x] 데이터 유지 여부 확인
 
-#### 1. 포트 매핑 (Port Mapping)
+#### 3.5.1 포트 매핑 (Port Mapping)
 
 **포트 매핑이란?**
 
@@ -1009,7 +1035,7 @@ docker run -d --name codyssey-container -p 8080:80 codyssey-web:v1
 ```
 
 
-#### 2. 볼륨 및 디렉터리 마운트 (Volume & Bind Mount)
+#### 3.5.2 볼륨 및 디렉터리 마운트 (Volume & Bind Mount)
 
 **볼륨이란?**
 
@@ -1088,7 +1114,7 @@ http://localhost:8081
 
 ![docker web](screenshots/docker_volume.png)
 
-#### 3. 데이터 영속성 확인
+#### 3.5.3 데이터 영속성 확인
 
 - [x] 호스트 디렉터리의 HTML 파일 수정
 - [x] 브라우저에서 변경된 내용 확인
@@ -1096,7 +1122,7 @@ http://localhost:8081
 - [x] 호스트 디렉터리에 원본 파일이 유지되는지 확인
 - [x] 새 컨테이너에 동일한 디렉터리를 마운트하여 데이터 재사용 확인
 
-컨테이너 내부에만 파일을 저장하면 컨테이너를 삭제할 때 그 파일도 함께 사라질 수 있다. 하지만 호스트 컴퓨터 내의 폴더를 연결해 놓으면 컨테이너를 삭제하더라도 원본 파일은 호스트 디렉터리에 남아 있으므로 더이터의 영속성을 확보할 수 있다.
+컨테이너 내부에만 파일을 저장하면 컨테이너를 삭제할 때 그 파일도 함께 사라질 수 있다. 하지만 호스트 컴퓨터 내의 폴더를 연결해 놓으면 컨테이너를 삭제하더라도 원본 파일은 호스트 디렉터리에 남아 있으므로 데이터의 영속성을 확보할 수 있다.
 
 **핵심 정리**
 
@@ -1169,7 +1195,7 @@ index.html이 그대로 남아 있다. (호스트 디렉터리의 데이터 유�
 10320ecb7581933eb4fd9cc84a7221b08436c9f177dccc52609442deb70927d0
 ```
 
-#### 4. Docker 데이터 백업 및 복원 전략
+#### 3.5.4 Docker 데이터 백업 및 복원 전략
 
 **백업 목적**
 
@@ -1253,8 +1279,168 @@ tar -xzf backups/백업파일명.tar.gz -C restore-test
 
 컨테이너와 데이터 저장 공간을 분리하고, 백업 파일을 별도로 보관하여 데이터 손실 위험을 줄인다.
 
+### 3.6 Docker Compose
 
-### 3.6 Git 및 GitHub
+#### 3.6.1 Docker Compose 기초
+
+Docker Compose는 여러 컨테이너의 실행 설정을 `docker-compose.yml` 파일에 작성하고, 하나의 명령어로 컨테이너를 실행하고 관리할 수 있도록 도와주는 도구이다.
+
+기존에는 `docker run` 명령어에 이미지, 포트, 볼륨, 환경 변수 등의 옵션을 직접 입력해야 했지만, Compose를 사용하면 이러한 실행 설정을 YAML 파일로 문서화할 수 있다.
+
+**기본 구조 예시**
+
+```yaml
+services:
+  web:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+```
+
+**실행 명령어**
+
+```bash
+docker compose up -d
+```
+
+**접속 주소**
+
+```text
+http://localhost:8080
+```
+
+**배움 포인트**
+- 컨테이너 실행 설정을 YAML 파일로 관리
+- 반복해서 입력하던 실행 명령을 설정 파일로 문서화
+- 동일한 설정으로 일관된 컨테이너 실행 가능
+
+#### 3.6.2 Docker Compose 멀티 컨테이너
+
+웹 서버와 보조 서비스를 하나의 Compose 파일에 정의하여 여러 컨테이너를 함께 실행한다.
+
+**실습 구성 예시**
+
+| 서비스 | 역할 |
+|---|---|
+| web | Nginx 웹 서버 |
+| app | 보조 서비스 |
+
+두 서비스를 Compose로 실행하고, 컨테이너 간 네트워크 통신이 가능한지 확인한다.
+
+**실행 명령어**
+
+```bash
+docker compose up -d
+```
+
+**컨테이너 간 통신 확인 예시**
+
+```bash
+docker compose exec web sh
+```
+
+컨테이너 내부에서 보조 서비스 이름을 이용해 통신을 확인한다.
+
+```bash
+ping app
+```
+
+※ 보조 서비스 이미지에 `ping` 명령어가 없거나 ICMP 통신을 지원하지 않을 수 있으므로, 필요하면 `curl` 등으로 확인한다.
+
+**배움 포인트**
+- 여러 컨테이너를 하나의 프로젝트로 관리
+- Compose가 생성하는 기본 네트워크 이해
+- 서비스 이름을 이용한 컨테이너 간 통신
+- 서비스 디스커버리(Service Discovery) 개념 이해
+
+#### 3.6.3 Compose 운영 명령어
+
+Docker Compose에서 자주 사용하는 명령어를 익히고 컨테이너의 실행 상태와 로그를 관리한다.
+
+| 명령어 | 기능 |
+|---|---|
+| `docker compose up -d` | 서비스 실행 |
+| `docker compose down` | 서비스 종료 및 컨테이너와 네트워크 제거 |
+| `docker compose ps` | 서비스 및 컨테이너 상태 확인 |
+| `docker compose logs` | 서비스 로그 확인 |
+| `docker compose logs -f` | 로그 실시간 확인 |
+
+**기본 운영 순서**
+
+```bash
+# 1. 서비스 실행
+docker compose up -d
+
+# 2. 실행 상태 확인
+docker compose ps
+
+# 3. 로그 확인
+docker compose logs
+
+# 4. 서비스 종료
+docker compose down
+```
+
+**배움 포인트**
+- 컨테이너 실행 및 종료 관리
+- 서비스 상태와 로그 확인
+- 반복 가능한 운영 관리 루틴 습득
+
+#### 3.6.4 환경 변수 활용
+
+환경 변수(Environment Variables)를 활용하여 실행 환경에 따라 서버의 설정을 변경한다.
+
+Docker Compose 파일에서 `${변수명}` 형식으로 환경 변수를 참조할 수 있다.
+
+**docker-compose.yml 예시**
+
+```yaml
+services:
+  web:
+    image: nginx:alpine
+    ports:
+      - "${HOST_PORT:-8080}:80"
+    environment:
+      - APP_MODE=${APP_MODE:-development}
+```
+
+**.env 파일 예시**
+
+```env
+HOST_PORT=8081
+APP_MODE=production
+```
+
+위 설정에서는 호스트 포트를 8081로 변경하고, 컨테이너에 `APP_MODE=production` 환경 변수를 전달한다.
+
+**설정 확인 명령어**
+
+```bash
+docker compose config
+docker compose up -d
+docker compose ps
+```
+
+**배움 포인트**
+- 환경 변수의 개념과 사용 방법
+- Compose 파일에서 환경 변수 참조
+- `.env` 파일을 이용한 설정 관리
+- 코드와 실행 환경 설정의 분리
+
+#### 3.6.5 실습 결과 및 검증
+
+| 실습 항목 | 검증 내용 | 결과 |
+|---|---|---|
+| Compose 기초 | 단일 서비스 실행 및 웹 접속 | 실습 후 기록 |
+| 멀티 컨테이너 | 2개 이상 서비스 실행 및 통신 확인 | 실습 후 기록 |
+| 운영 명령어 | up, down, ps, logs 실행 | 실습 후 기록 |
+| 환경 변수 | 포트 및 실행 모드 변경 확인 | 실습 후 기록 |
+
+**핵심 정리**
+
+Docker Compose를 활용하면 여러 컨테이너의 실행 설정을 하나의 YAML 파일로 관리할 수 있다. 이를 통해 컨테이너 실행 과정을 표준화하고, 서비스 간 네트워크 통신 및 환경 변수 기반 설정 관리 방법을 익힐 수 있다.
+
+### 3.7 Git 및 GitHub
 - [x] Git 저장소 초기화 또는 기존 저장소 확인
 - [x] 변경 파일 확인
 - [x] 변경 사항 커밋
@@ -1265,7 +1451,7 @@ tar -xzf backups/백업파일명.tar.gz -C restore-test
 사용 명령어: `git status`, `git add`, `git commit`, `git remote -v`, `git push`
 
 
-#### 3.6.1 Git 저장소 확인
+#### 3.7.1 Git 저장소 확인
 
 - Git은 파일의 변경 이력을 관리하는 버전 관리 시스템이다.
 - GitHub는 Git 저장소를 온라인에 저장하고 다른 사람과 공유할 수 있는 플랫폼이다.
@@ -1314,7 +1500,7 @@ branch.main.vscode-merge-base=origin/main
 ```
 
 
-#### 3.6.2 변경 파일 확인 및 스테이징
+#### 3.7.2 변경 파일 확인 및 스테이징
 
 **변경 파일 확인**
 
@@ -1334,7 +1520,7 @@ git add .
 스테이징 영역은 커밋할 변경 사항을 임시로 모아두는 공간이다.
 
 
-#### 3.6.3 변경 사항 커밋
+#### 3.7.3 변경 사항 커밋
 
 ```bash
 % git commit -m "update README.md"
@@ -1366,7 +1552,7 @@ After doing this, you may fix the identity used for this commit with:
 커밋 메시지를 통해 어떤 작업을 수행했는지 기록할 수 있다.
 
 
-#### 3.6.4 원격 저장소 연결 확인
+#### 3.7.4 원격 저장소 연결 확인
 
 ```bash
 % git remote -v
@@ -1384,7 +1570,7 @@ GitHub 원격 저장소의 주소와 연결 상태를 확인한다.
 | `push` | 로컬 저장소의 변경 사항 업로드 |
 
 
-#### 3.6.5 GitHub에 변경 사항 업로드
+#### 3.7.5 GitHub에 변경 사항 업로드
 
 ```bash
 % git push origin main
@@ -1408,7 +1594,7 @@ To https://github.com/1cando/codyssey1.git
 | `main` | 업로드할 브랜치 이름 |
 
 
-#### 3.6.6 GitHub 원격 저장소 확인
+#### 3.7.6 GitHub 원격 저장소 확인
 
 GitHub 저장소에 접속하여 업로드한 파일과 커밋 이력을 확인한다.
 
@@ -1416,7 +1602,7 @@ GitHub 저장소에 접속하여 업로드한 파일과 커밋 이력을 확인�
 
 https://github.com/1cando/codyssey1
 
-#### 3.6.7 GitHub SSH 키 설정
+#### 3.7.7 GitHub SSH 키 설정
 
 - HTTPS와 SSH의 인증 방식 차이 이해
 - 공개키와 개인키의 역할 이해
@@ -1524,7 +1710,7 @@ To github.com:1cando/codyssey1.git
 - `git push`는 로컬 저장소의 커밋을 원격 저장소에 업로드한다.
 - SSH를 설정한다.
 
-## 5. 트러블슈팅
+## 4. 트러블슈팅
 
 ## 문제 1: Docker 명령어 실행 오류
 
