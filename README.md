@@ -1694,7 +1694,7 @@ Compressing objects: 100% (6/6), done.
 Writing objects: 100% (8/8), 6.09 KiB | 6.09 MiB/s, done.
 Total 8 (delta 1), reused 0 (delta 0), pack-reused 0 (from 0)
 remote: Resolving deltas: 100% (1/1), completed with 1 local object.
-To github.com:1cando/codyssey1.git
+To github.com:[주소].git
    f50f78f..20043ec  main -> main
 ```
 
