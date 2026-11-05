@@ -1609,13 +1609,13 @@ https://github.com/1cando/codyssey1
 - SSH 키를 이용한 GitHub 인증 설정
 - 개인키를 안전하게 관리하는 보안 습관 학습
 
-[x] 기존 SSH 키 확인
-[x] Ed25519 SSH 키 생성
-[x] SSH 에이전트에 개인키 등록
-[x] GitHub에 공개키 등록
-[x] SSH 연결 테스트 성공
-[x] 원격 저장소 주소를 HTTPS에서 SSH로 변경
-[x] SSH 방식으로 Push 테스트 성공
+- [x] 기존 SSH 키 확인
+- [x] Ed25519 SSH 키 생성
+- [x] SSH 에이전트에 개인키 등록
+- [x] GitHub에 공개키 등록
+- [x] SSH 연결 테스트 성공
+- [x] 원격 저장소 주소를 HTTPS에서 SSH로 변경
+- [x] SSH 방식으로 Push 테스트 성공
 
 **HTTPS와 SSH의 차이**
 | 구분 | HTTPS | SSH |
